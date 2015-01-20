@@ -1,5 +1,5 @@
 var fs 		= require('fs');
-var vic		= require('victor');
+//var vic		= require('victor');
 //var lineReader	= require('line-by-line');
 
 
@@ -30,7 +30,6 @@ function parser(fname, res) {
 		if (err) 
 			throw err;
 		else {
-		
 			var gcode = data.toString();	
 			var line = gcode.split('\n') //get one line by line
 			//console.log(line); //line == array of all lines
@@ -47,7 +46,10 @@ function parser(fname, res) {
 						prevX = prevY.replace('Y', '');
 						//new newPos = new Victor(x.replace('X', ''), y.replace('Y', '');
 					}	
+				} else {
+					console.log("not G1 command");
 				}
+				
 				tok = line[cnt+1]; //next line
 				if(tok[0].toString() === 'G1'){
 					var nextX = tok[1];
@@ -56,42 +58,37 @@ function parser(fname, res) {
 						nextX = nextX.replace('X', '');
 						nextX = nextY.replace('Y', '');
 					}
-		}
-			
-	var entDist = dist(prevX, prevY, nextX, nextY);
-	//var entDist = prePos.distance(interPos); //victor
-
-	//find midpoint until distance will be greater than .5
-		interX = (prevX + nextX)/2;
-		interY = (prevY + nextY)/2;
-		
-		while (dist(interX, interY, x, y) > .5){
-			nextX = interX;
-			nextY = interY;
-
-			interX = (prevX + x)/2;
-			interY = (prevY + y)/2;
-		}
-
-		//log interX to file
-		prevX = interX;
-		prevY = interY;
-	}
-
-
-
-	var newLine = interX + '\t' + interY + '\n';
-						//write file
-						fs.appendFile("xy.txt", newLine, function(err){
-							if(err) console.log(err);
-						})	
-					}
 				} else {
 					console.log("not G1 command");
 				}
-			})
+			
+			var entDist = dist(prevX, prevY, nextX, nextY);
+			//var entDist = prePos.distance(interPos); //victor
+
+			//find midpoint until distance will be greater than .5
+			interX = (prevX + nextX)/2;
+			interY = (prevY + nextY)/2;
+		
+			while (dist(interX, interY, x, y) > .5){
+				nextX = interX;
+				nextY = interY;
+
+				interX = (prevX + x)/2;
+				interY = (prevY + y)/2;
+			}
+
+			//log interX to file
+			prevX = interX;
+			prevY = interY;
+
+			var newLine = interX + '\t' + interY + '\n';
+				//write file
+				fs.appendFile("xy.txt", newLine, function(err){
+					if(err) console.log(err);
+				})	
+			} //end of while(EOL)
 		}
-	})
+	}); //end of fs.read()
 }
-Y 
+
 parser(filename, data);
