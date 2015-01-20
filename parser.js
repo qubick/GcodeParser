@@ -72,6 +72,10 @@ function parser(fname, res) {
 			interX = (prevX + x)/2;
 			interY = (prevY + y)/2;
 		}
+
+		//log interX to file
+		prevX = interX;
+		prevY = interY;
 	}
 
 
@@ -89,5 +93,5 @@ function parser(fname, res) {
 		}
 	})
 }
-
+Y 
 parser(filename, data);
