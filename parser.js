@@ -3,8 +3,9 @@ var fs 				= require('fs');
 //var lineReader	= require('line-by-line');
 
 
-var filename = "tian.gcode" 
-var rDist = 1; //const: regular distance for interpolation btw two position from gcode
+var inFile		 	= "tian.gcode" 
+var outFile		 	= "output.txt"
+var rDist 			= 1; //const: regular distance for interpolation btw two position from gcode
 
 
 function dist(x1,y1,x2,y2) {
@@ -33,7 +34,7 @@ function parser(fname) {
 			} //get first line
 			
 			var newLine = prevX + '\t' + prevY + '\n';
-			fs.appendFile("xy.txt", newLine, function(err){
+			fs.appendFile(outFile, newLine, function(err){
 				if(err) console.log(err);
 			})
 			
@@ -70,7 +71,7 @@ console.log('X: ', prevX, 'Y: ', prevY);
 							eDist = dist(prevX, prevY, nextX, nextY);
 
 							newLine = prevX + '\t' + prevY + '\n';
-							fs.appendFile("xy.txt", newLine, function(err){
+							fs.appendFile(outFile, newLine, function(err){
 								if(err) console.log(err);
 							})
 						}
@@ -78,7 +79,7 @@ console.log('X: ', prevX, 'Y: ', prevY);
 							prevX = nextX; prevY = nextY;
 							
 							newLine = prevX + '\t' + prevY + '\n';
-							fs.appendFile("xy.txt", newLine, function(err){
+							fs.appendFile(outFile, newLine, function(err){
 								if(err) console.log(err);
 							})
 						}	
@@ -92,4 +93,4 @@ console.log('X: ', prevX, 'Y: ', prevY);
 	}) //end of fs.read()
 } //end of main
 
-parser(filename);
+parser(inFile);
