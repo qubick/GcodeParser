@@ -1,12 +1,13 @@
 var fs 				= require('fs');
+var validator 		= require('validator');
 //var vic			= require('victor');
 //var lineReader	= require('line-by-line');
 
 
-var inFile		 	= "tian.gcode" 
+var inFile		 	= "tian-layer5.gcode" 
 var outFile		 	= "output.txt"
 var rDist 			= 1; //const: regular distance for interpolation btw two position
-
+var first			= 0;
 
 function dist(x1,y1,x2,y2) {
 
@@ -22,21 +23,22 @@ function parser(fname) {
 			
 			//line.forEach(function(entry){ //not for each -> loop
 			//var tok = entry.split(' '); //take one line
-			var tok = line[0].split(' '); //get first line
-			if(tok[0] === 'G1'){
-				var prevX = tok[1];
-				var prevY = tok[2];
-				
-				if(prevX[0] == 'X' && prevY[0] == 'Y'){
-					prevX = parseFloat(prevX.replace('X', ''));
-					prevY = parseFloat(prevY.replace('Y', ''));
-				} 
-			} //get first line
+			while(1){
+				var tok = line[first].split(' '); //get first line
+				if(tok[0] == 'G1'){
+					var prevX = tok[1];
+					var prevY = tok[2];
+					if(prevX[0] == 'X' && prevY[0] == 'Y'){
+						prevX = parseFloat(prevX.replace('X', ''));
+						prevY = parseFloat(prevY.replace('Y', ''));
+					} 
+				}
+				if (validator.isFloat(prevX) && validator.isFloat(prevY)) 
+					break; //got first pos then break while
+				else
+					first++;
+			}
 			
-			var newLine = prevX + '\t' + prevY + '\n';
-			fs.appendFile(outFile, newLine, function(err){
-				if(err) console.log(err);
-			})
 			
 			for(var i=1; i<line.length; i++){				
 				tok = line[i].split(' '); //next line
@@ -48,9 +50,10 @@ function parser(fname) {
 						nextX = parseFloat(nextX.replace('X', ''));
 						nextY = parseFloat(nextY.replace('Y', ''));
 console.log('got next line from gcode file: ', nextX, nextY);
-
+console.log(prevX, prevY);
 						// interpolate with constant distance
 						var eDist = dist(prevX, prevY, nextX, nextY);
+console.log(eDist);
 						var theta = Math.atan(Math.abs(nextY-prevY)/Math.abs(nextX-prevX));
 
 						while (eDist > rDist){
