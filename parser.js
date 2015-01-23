@@ -73,7 +73,7 @@ console.log('X: ', prevX, 'Y: ', prevY);
 							//eDist -= rDist;
 							eDist = dist(prevX, prevY, nextX, nextY);
 
-							newLine = prevX + '\t' + prevY + '\n';
+							newLine = prevX + ',' + prevY + '\n';
 							fs.appendFile(outFile, newLine, function(err){
 								if(err) console.log(err);
 							})
@@ -81,7 +81,7 @@ console.log('X: ', prevX, 'Y: ', prevY);
 						if(eDist < rDist){
 							prevX = nextX; prevY = nextY;
 							
-							newLine = prevX + '\t' + prevY + '\n';
+							newLine = prevX + ',' + prevY + '\n';
 							fs.appendFile(outFile, newLine, function(err){
 								if(err) console.log(err);
 							})
