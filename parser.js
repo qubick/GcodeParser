@@ -5,7 +5,7 @@ var fs 				= require('fs');
 
 var inFile		 	= "tian.gcode" 
 var outFile		 	= "output.txt"
-var rDist 			= 1; //const: regular distance for interpolation btw two position from gcode
+var rDist 			= 1; //const: regular distance for interpolation btw two position
 
 
 function dist(x1,y1,x2,y2) {
